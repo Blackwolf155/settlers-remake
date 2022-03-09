@@ -45,6 +45,9 @@ public class CustomGraphicsInterceptor {
 		if (fileIndex == 36) { // use our own ships
 			return new CustomShipsDatFile(reader, imageProvider);
 		}
+		if(fileIndex == 13) {
+			return new CustomDatFile13(reader, imageProvider);
+		}
 		return reader;
 	}
 
