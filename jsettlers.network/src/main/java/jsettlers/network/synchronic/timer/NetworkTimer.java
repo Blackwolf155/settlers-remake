@@ -39,6 +39,9 @@ import jsettlers.network.client.task.packets.TaskPacket;
  */
 public final class NetworkTimer extends TimerTask implements INetworkClientClock {
 	public static final short TIME_SLICE = 50;
+	public static final float MIN_SPEED = 0.25f;
+	public static final short MAX_SPEED = 200;
+	
 	private static final Comparator<SyncTasksPacket> TASKS_BY_TIME_COMPARATOR = Comparator.comparingInt(SyncTasksPacket::getLockstepNumber);
 
 	private final Timer timer;
@@ -93,7 +96,7 @@ public final class NetworkTimer extends TimerTask implements INetworkClientClock
 
 	@Override
 	public void stopExecution() {
-		setPausing(true);
+		setPauseActive(true);
 		timer.cancel();
 
 		closeReplayLogStreamIfNeeded();
@@ -238,47 +241,13 @@ public final class NetworkTimer extends TimerTask implements INetworkClientClock
 		}
 	}
 
-	/**
-	 * Goes 60 * 1000 milliseconds forward as fast as possible
-	 */
-	@Override
-	public synchronized void fastForward() {
-		this.setPausing(true);
-
-		final int runs = 60 * 1000 / TIME_SLICE;
-		for (int i = 0; i < runs; i++) {
-			tryExecuteRun();
-		}
-
-		this.setPausing(false);
-	}
-
-	@Override
-	public synchronized void fastForwardTo(int targetGameTime) {
-		this.setPausing(true);
-
-		System.out.println("Playing game forward to game time: " + targetGameTime);
-
-		while (time < targetGameTime) {
-			tryExecuteRun();
-		}
-	}
-
-	// methods for pausing
-
-	@Override
-	public void setPausing(boolean pausing) {
-		this.pauseActive = pausing;
-	}
+	// ////////////////////////////////////////////////////////////////////////
+	// Time or speed changes
+	// ////////////////////////////////////////////////////////////////////////
 
 	@Override
 	public void invertPausing() {
 		this.pauseActive = !this.pauseActive;
-	}
-
-	@Override
-	public boolean isPausing() {
-		return pauseActive;
 	}
 
 	@Override
@@ -288,24 +257,70 @@ public final class NetworkTimer extends TimerTask implements INetworkClientClock
 	}
 
 	@Override
-	public void setGameSpeed(float speedFactor) {
-		this.speedFactor = speedFactor;
-	}
-
-
-	public float getGameSpeed() {
-		return speedFactor;
-	}
-
-	@Override
 	public void multiplyGameSpeed(float factor) {
 		this.speedFactor *= factor;
 	}
+	
+	@Override
+	public void increaseGameSpeed(int increaseFactor) {
+		if (speedFactor < 1) {
+			speedFactor = 1;
+			return;
+		}
+		
+		this.speedFactor += increaseFactor;
+		
+		if (speedFactor > MAX_SPEED) {
+			speedFactor = MAX_SPEED;
+		}
+	}
+	
+	@Override
+	public void decreaseGameSpeed(int decreaseFactor) {
+		if (speedFactor <= MIN_SPEED) {
+			return;
+		}
+		
+		if (speedFactor <= 1) {
+			this.speedFactor = speedFactor / (2 * decreaseFactor);
+			return;
+		}
+		
+		if (speedFactor >= 2) {
+			this.speedFactor -= decreaseFactor;
+			return;
+		}
+		
+		this.speedFactor = 1;
+	}
+	
+	/**
+	 * Goes 60 * 1000 milliseconds forward as fast as possible
+	 */
+	@Override
+	public synchronized void fastForward() {
+		this.setPauseActive(true);
+
+		final int runs = 60 * 1000 / TIME_SLICE;
+		for (int i = 0; i < runs; i++) {
+			tryExecuteRun();
+		}
+
+		this.setPauseActive(false);
+	}
 
 	@Override
-	public void setTaskExecutor(ITaskExecutor taskExecutor) {
-		this.taskExecutor = taskExecutor;
+	public synchronized void fastForwardTo(int targetGameTime) {
+		this.setPauseActive(true);
+
+		System.out.println("Playing game forward to game time: " + targetGameTime);
+
+		while (time < targetGameTime) {
+			tryExecuteRun();
+		}
 	}
+	
+	
 
 	@Override
 	public void scheduleSyncTasksPacket(SyncTasksPacket tasksPacket) {
@@ -337,16 +352,6 @@ public final class NetworkTimer extends TimerTask implements INetworkClientClock
 				e.printStackTrace();
 			}
 		}
-	}
-
-	@Override
-	public void setTime(int newTime) {
-		this.time = newTime;
-	}
-
-	@Override
-	public int getTime() {
-		return time;
 	}
 
 	@Override
@@ -414,5 +419,47 @@ public final class NetworkTimer extends TimerTask implements INetworkClientClock
 		int seconds = (time / 1000) % 60;
 		int millis = time % 1000;
 		return String.format(Locale.ENGLISH, "lockstep: %d (game time: %dms / %02d:%02d:%02d:%03d)", lockstep, time, hours, minutes, seconds, millis);
+	}
+	
+	// ////////////////////////////////////////////////////////////////////////
+	// Getter & Setter
+	// ////////////////////////////////////////////////////////////////////////
+
+	@Override
+	public void setTime(int newTime) {
+		this.time = newTime;
+	}
+
+	@Override
+	public int getTime() {
+		return time;
+	}
+
+	@Override
+	public boolean isPauseActive() {
+		return pauseActive;
+	}
+
+	@Override
+	public void setPauseActive(boolean pausing) {
+		this.pauseActive = pausing;
+	}
+
+	@Override
+	public void setGameSpeed(float speedFactor) {
+		this.speedFactor = speedFactor;
+	}
+
+	public float getGameSpeed() {
+		return speedFactor;
+	}
+	
+	public ITaskExecutor getTaskExecutor() {
+		return taskExecutor;
+	}
+
+	@Override
+	public void setTaskExecutor(ITaskExecutor taskExecutor) {
+		this.taskExecutor = taskExecutor;
 	}
 }

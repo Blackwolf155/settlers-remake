@@ -62,7 +62,7 @@ public final class ConstructionMarksThread implements Runnable {
 				}
 
 				while (building != null && !canceled) {
-					if (!pausingSupplier.isPausing()) {
+					if (!pausingSupplier.isPauseActive()) {
 						StopWatch watch = new MilliStopWatch();
 						watch.restart();
 

@@ -88,7 +88,7 @@ public class NetworkClientClockMock implements INetworkClientClock {
 	}
 
 	@Override
-	public boolean isPausing() {
+	public boolean isPauseActive() {
 		throw new UnsupportedOperationException("not mocked");
 	}
 
@@ -98,7 +98,7 @@ public class NetworkClientClockMock implements INetworkClientClock {
 	}
 
 	@Override
-	public void setPausing(boolean b) {
+	public void setPauseActive(boolean b) {
 		throw new UnsupportedOperationException("not mocked");
 	}
 
@@ -114,6 +114,16 @@ public class NetworkClientClockMock implements INetworkClientClock {
 
 	@Override
 	public void schedule(INetworkTimerable timerable, short delay) {
+		throw new UnsupportedOperationException("not mocked");
+	}
+
+	@Override
+	public void increaseGameSpeed(int increaseFactor) {
+		throw new UnsupportedOperationException("not mocked");
+	}
+
+	@Override
+	public void decreaseGameSpeed(int decreaseFactor) {
 		throw new UnsupportedOperationException("not mocked");
 	}
 
@@ -158,5 +168,4 @@ public class NetworkClientClockMock implements INetworkClientClock {
 	public void fastForwardTo(int targetGameTime) {
 		time = targetGameTime;
 	}
-
 }

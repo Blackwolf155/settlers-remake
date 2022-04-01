@@ -83,7 +83,7 @@ public class ReplayUtils {
 
 	private static OfflineNetworkConnector createPausingOfflineNetworkConnector() {
 		OfflineNetworkConnector networkConnector = new OfflineNetworkConnector();
-		networkConnector.getGameClock().setPausing(true);
+		networkConnector.getGameClock().setPauseActive(true);
 		return networkConnector;
 	}
 

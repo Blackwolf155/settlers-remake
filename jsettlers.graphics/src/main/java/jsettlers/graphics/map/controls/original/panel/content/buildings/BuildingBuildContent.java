@@ -122,11 +122,11 @@ public class BuildingBuildContent extends AbstractContentProvider {
 
 	@Override
 	public PointAction getSelectAction(ShortPoint2D position) {
-		if (activeBuilding != null) {
-			return new BuildAction(activeBuilding, position);
-		} else {
+		if (activeBuilding == null) {
 			return null;
 		}
+		
+		return new BuildAction(activeBuilding, position);
 	}
 
 	@Override

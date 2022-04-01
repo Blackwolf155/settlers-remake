@@ -64,6 +64,7 @@ clean {
 
 dependencies {
     api project(':go.graphics')
+    api project(':jsettlers.network')
     testImplementation project(':jsettlers.testutils')
 }
 

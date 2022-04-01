@@ -32,13 +32,18 @@ public class GameTimeProvider implements IGameTimeProvider {
 	}
 
 	@Override
+	public IGameClock getGameClock() {
+		return gameClock;
+	}
+	
+	@Override
 	public int getGameTime() {
 		return gameClock.getTime();
 	}
 
 	@Override
 	public boolean isGamePausing() {
-		return gameClock.isPausing();
+		return gameClock.isPauseActive();
 	}
 
 	@Override

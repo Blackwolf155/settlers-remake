@@ -52,6 +52,7 @@ import jsettlers.common.action.SetSpeedAction;
 import jsettlers.common.action.SetTradingWaypointAction;
 import jsettlers.common.action.ShowConstructionMarksAction;
 import jsettlers.common.action.SoldierAction;
+import jsettlers.common.action.executable.ExecutableAction;
 import jsettlers.common.buildings.BuildingVariant;
 import jsettlers.common.buildings.EBuildingType;
 import jsettlers.common.buildings.IBuilding;
@@ -162,6 +163,10 @@ public class GuiInterface implements IMapInterfaceListener, ITaskExecutorGuiInte
 		if (action.getActionType() != EActionType.SCREEN_CHANGE) {
 			System.out.println("action(Action): " + action.getActionType() + "   at game time: " + MatchConstants.clock().getTime());
 		}
+		
+		if (action instanceof ExecutableAction) {
+			((ExecutableAction) action).executeAction();
+		}
 
 		switch (action.getActionType()) {
 			case BUILD:
@@ -187,24 +192,12 @@ public class GuiInterface implements IMapInterfaceListener, ITaskExecutorGuiInte
 				break;
 
 			case SPEED_SET_PAUSE:
-				clock.setPausing(true);
+				clock.setPauseActive(true);
 				break;
 
 			case SPEED_UNSET_PAUSE:
-				clock.setPausing(false);
+				clock.setPauseActive(false);
 				break;
-
-			case SPEED_FASTER:
-				if (!multiplayer) {
-					clock.multiplyGameSpeed(1.2f);
-				}
-				break;
-			case SPEED_SLOWER:
-				if (!multiplayer) {
-					clock.multiplyGameSpeed(1 / 1.2f);
-				}
-				break;
-
 			case SET_SPEED:
 				if (!multiplayer) {
 					clock.setGameSpeed(((SetSpeedAction) action).getSpeed());

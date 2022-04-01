@@ -14,6 +14,8 @@
  *******************************************************************************/
 package jsettlers.common.statistics;
 
+import jsettlers.network.client.interfaces.IGameClock;
+
 /**
  * This interface supplies game time information to the UI.
  * 
@@ -22,6 +24,11 @@ package jsettlers.common.statistics;
  */
 public interface IGameTimeProvider {
 	IGameTimeProvider DUMMY_IMPLEMENTATION = new IGameTimeProvider() {
+		@Override
+		public IGameClock getGameClock() {
+			return null;
+		}
+		
 		@Override
 		public int getGameTime() {
 			return 0;
@@ -38,6 +45,8 @@ public interface IGameTimeProvider {
 		}
 	};
 
+	IGameClock getGameClock();
+	
 	/**
 	 * Gets the game time.
 	 * 

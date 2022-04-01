@@ -27,5 +27,5 @@ public interface IPausingSupplier {
 	 * @return Returns true if the game's clock is pausing<br>
 	 *         false otherwise.
 	 */
-	boolean isPausing();
+	boolean isPauseActive();
 }

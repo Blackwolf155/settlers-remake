@@ -36,6 +36,10 @@ public interface IGameClock extends IPausingSupplier {
 	void setTaskExecutor(ITaskExecutor taskExecutor);
 
 	void multiplyGameSpeed(float factor);
+	
+	void increaseGameSpeed(int increaseFactor);
+
+	void decreaseGameSpeed(int decreaseFactor);
 
 	void setGameSpeed(float speedFactor);
 
@@ -43,7 +47,7 @@ public interface IGameClock extends IPausingSupplier {
 
 	void invertPausing();
 
-	void setPausing(boolean b);
+	void setPauseActive(boolean b);
 
 	void fastForward();
 

@@ -356,8 +356,8 @@ public final class MainGrid implements Serializable {
 	}
 
 	public void save(Byte playerId, UIState uiState) throws IOException {
-		boolean savedPausingState = MatchConstants.clock().isPausing();
-		MatchConstants.clock().setPausing(true);
+		boolean savedPausingState = MatchConstants.clock().isPauseActive();
+		MatchConstants.clock().setPauseActive(true);
 		try {
 			Thread.sleep(300L); // FIXME @Andreas serializer should wait until threads did their work!
 		} catch (InterruptedException e) {
@@ -369,7 +369,7 @@ public final class MainGrid implements Serializable {
 		MapList list = MapList.getDefaultList();
 		list.saveMap(playerStates, header, MainGrid.this);
 
-		MatchConstants.clock().setPausing(savedPausingState);
+		MatchConstants.clock().setPauseActive(savedPausingState);
 	}
 
 	private PlayerState[] calculatePlayerStates(Byte playerId, UIState uiState) {

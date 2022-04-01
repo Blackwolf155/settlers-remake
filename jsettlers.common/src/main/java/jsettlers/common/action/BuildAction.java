@@ -25,28 +25,28 @@ import jsettlers.common.position.ShortPoint2D;
  */
 public class BuildAction extends PointAction {
 
-	private final EBuildingType building;
+	private final EBuildingType buildingType;
+
+	// ////////////////////////////////////////////////////////////////////////
+	// Init
+	// ////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * Creates a new build action.
 	 * 
-	 * @param building
-	 *            The building to be built.
-	 * @param position
-	 *            The position at which the building should (approximately) be built.
+	 * @param building The building to be built.
+	 * @param position The position at which the building should (approximately) be built.
 	 */
 	public BuildAction(EBuildingType building, ShortPoint2D position) {
 		super(EActionType.BUILD, position);
-		this.building = building;
+		this.buildingType = building;
 	}
-
-	/**
-	 * gets the building that corresponds with this action, if the action is an build action.
-	 * 
-	 * @return The building, <code>null</code> if it is not a build action.
-	 */
+	
+	// ////////////////////////////////////////////////////////////////////////
+	// Getter & Setter
+	// ////////////////////////////////////////////////////////////////////////
+	
 	public EBuildingType getBuildingType() {
-		return this.building;
+		return this.buildingType;
 	}
-
 }

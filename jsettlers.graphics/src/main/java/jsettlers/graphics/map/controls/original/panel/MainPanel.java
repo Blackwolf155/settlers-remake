@@ -25,6 +25,8 @@ import jsettlers.common.action.PointAction;
 import jsettlers.common.action.SetDockAction;
 import jsettlers.common.action.SetTradingWaypointAction;
 import jsettlers.common.action.SetTradingWaypointAction.EWaypointType;
+import jsettlers.common.action.executable.DecreaseSpeedAction;
+import jsettlers.common.action.executable.IncreaseSpeedAction;
 import jsettlers.common.images.EImageLinkType;
 import jsettlers.common.images.OriginalImageLink;
 import jsettlers.common.map.IGraphicsGrid;
@@ -85,7 +87,8 @@ public class MainPanel extends UIPanel {
 
 	private final UIPanel gamePanel = new UIPanel();
 
-	private final CountArrows changeSpeedArrows = new CountArrows(() -> new Action(EActionType.SPEED_FASTER), () -> new Action(EActionType.SPEED_SLOWER));
+	private final CountArrows changeSpeedArrows = new CountArrows(() -> new IncreaseSpeedAction(game), () -> new DecreaseSpeedAction(game));
+
 	private final Label speedLabel = new Label("", EFontSize.NORMAL) {
 		@Override
 		public synchronized void drawAt(GLDrawContext gl) {
