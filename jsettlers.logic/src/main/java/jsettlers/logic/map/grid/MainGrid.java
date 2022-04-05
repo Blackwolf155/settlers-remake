@@ -21,7 +21,6 @@ import java.util.BitSet;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
-
 import java.util.Optional;
 import jsettlers.algorithms.borders.BordersThread;
 import jsettlers.algorithms.borders.IBordersThreadGrid;
@@ -1640,8 +1639,11 @@ public final class MainGrid implements Serializable {
 
 		@Override
 		public boolean isValidNextPathPosition(IPathCalculatable pathCalculatable, ShortPoint2D nextPos, ShortPoint2D targetPos) {
-			return isValidPosition(pathCalculatable, nextPos.x, nextPos.y) && (!pathCalculatable.needsPlayersGround()
-				|| partitionsGrid.getPartitionAt(pathCalculatable) == partitionsGrid.getPartitionAt(targetPos.x, targetPos.y));
+			return isValidPosition(pathCalculatable, nextPos.x, nextPos.y)  &&
+					isValidPosition(pathCalculatable, targetPos.x, targetPos.y) &&
+					(!pathCalculatable.needsPlayersGround() ||
+							partitionsGrid.getPartitionAt(pathCalculatable) ==
+							partitionsGrid.getPartitionAt(targetPos.x, targetPos.y));
 		}
 
 		@Override

@@ -16,10 +16,10 @@ package jsettlers.graphics.image;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.ShortBuffer;
 
 import go.graphics.EUnifiedMode;
 import go.graphics.GLDrawContext;
-import java.nio.ShortBuffer;
 import jsettlers.common.Color;
 import jsettlers.graphics.image.reader.ImageMetadata;
 import jsettlers.graphics.image.reader.translator.ImageDataProducer;
@@ -88,8 +88,12 @@ public class SettlerImage extends SingleImage {
 	 * 
 	 * @return The torso.
 	 */
-	public Image getTorso() {
+	public SingleImage getTorso() {
 		return this.torso;
+	}
+
+	public SingleImage getShadow() {
+		return shadow;
 	}
 
 	protected ShortBuffer generateTextureData() {
